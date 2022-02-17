@@ -13,20 +13,28 @@ namespace VizsgaremekAPI.Controllers
 
         // GET: /<Foglalasok>
         [HttpGet]
-        public IActionResult Get([FromHeader]string Auth)
+        public IActionResult Get([FromHeader]string Auth, [FromQuery] int? felh)
         {
             if (Auth == AktivTokenek.AdminToken || Auth == AktivTokenek.UserToken)
             {
-                List<Foglala> foglalasok = _context.Foglalas.ToList();
-               foglalasok.ForEach(x => x.FelhasznaloNev = _context.Felhasznalos.First(f => f.Azon == x.Azon).Nev);
+                if (felh is not null)
+                {
+                    List<Foglala> felhasznaloFoglalasai = _context.Foglalas.Where(x => x.Azon == felh).ToList();
+                    return StatusCode(200, felhasznaloFoglalasai);
+                }
+                else
+                {
+                    List<Foglala> foglalasok = _context.Foglalas.ToList();
+                    foglalasok.ForEach(x => x.FelhasznaloNev = _context.Felhasznalos.First(f => f.Azon == x.Azon).Nev);
 
-                return StatusCode(200,foglalasok);
+                    return StatusCode(200,foglalasok);
+                }
             }
 
             return StatusCode(403);
         }
 
-        // GET: /<Foglalasok>/Ma
+        // GET: /<Foglalasok>/Aktiv
         [HttpGet("Aktiv")]
         public IActionResult GetAktiv([FromHeader] string Auth)
         {
