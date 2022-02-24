@@ -57,6 +57,33 @@ namespace VizsgaremekAPI.Controllers
             return StatusCode(403);
         }
 
+        [HttpGet("Bevetel")]
+        public IActionResult GetBevetel([FromHeader] string Auth)
+        {
+            if (Auth == AktivTokenek.AdminToken || Auth == AktivTokenek.UserToken)
+            {
+                List<Rendele> DBContextrendelesek = new(_context.Rendeles.Where(x=>x.Etelstatus > 3 && x.Italstatus > 3));
+                DBContextrendelesek.ForEach(r => r.Tetels = _context.Tetels.Where(t => t.Razon == r.Razon).ToList());
+                DBContextrendelesek.ForEach(r => r.Tetels.ForEach(t =>
+                {
+                    t.BazonNavigation = _context.Burgers.First(x => x.Bazon == t.Bazon);
+                    t.DazonNavigation = _context.Desszerts.First(x => x.Dazon == t.Dazon);
+                    t.IazonNavigation = _context.Itals.First(x => x.Iazon == t.Iazon);
+                    t.KazonNavigation = _context.Korets.First(x => x.Kazon == t.Kazon);
+
+                }));
+                List<int> bevetelek = new();
+                bevetelek.Add((int)DBContextrendelesek.Where(x=>x.Ido.Date == System.DateTime.Today).Sum(x=>x.Vegosszeg));
+                bevetelek.Add((int)DBContextrendelesek.Where(x=>x.Ido.Month == System.DateTime.Today.Month).Sum(x=>x.Vegosszeg));
+                bevetelek.Add((int)DBContextrendelesek.Sum(x=>x.Vegosszeg));
+
+                return StatusCode(200, bevetelek);
+            }
+
+            return StatusCode(403);
+        }
+
+
         // POST /<Rendelesek>
         [HttpPost]
         public IActionResult Post([FromHeader]string Auth, Rendele r)

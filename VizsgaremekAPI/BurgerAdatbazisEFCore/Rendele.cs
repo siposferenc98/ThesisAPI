@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 #nullable disable
@@ -22,5 +23,7 @@ namespace VizsgaremekAPI.BurgerAdatbazisEFCore
         [JsonIgnore]
         public virtual Foglala FazonNavigation { get; set; }
         public virtual List<Tetel> Tetels { get; set; }
+        public int? Vegosszeg => Tetels is not null ? Tetels.Sum(x => x.Vegosszeg) : 0;
+
     }
 }

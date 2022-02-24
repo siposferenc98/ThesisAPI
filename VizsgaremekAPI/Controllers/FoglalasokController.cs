@@ -71,11 +71,17 @@ namespace VizsgaremekAPI.Controllers
             if (Auth == AktivTokenek.AdminToken || Auth == AktivTokenek.UserToken)
             {
                 Foglala aktf = _context.Foglalas.Find(id);
-                _context.Foglalas.Remove(aktf);
-                if (_context.SaveChanges() > 0)
-                    return StatusCode(201);
+                if (aktf is not null)
+                {
+                    _context.Foglalas.Remove(aktf);
+                    if (_context.SaveChanges() > 0)
+                        return StatusCode(200);
+                    else
+                        return StatusCode(500);
+                }
                 else
-                    return StatusCode(500);
+                    return StatusCode(404);
+                
 
             }
 

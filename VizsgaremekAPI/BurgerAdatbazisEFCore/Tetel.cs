@@ -28,5 +28,7 @@ namespace VizsgaremekAPI.BurgerAdatbazisEFCore
         public virtual Koret KazonNavigation { get; set; }
         [JsonIgnore]
         public virtual Rendele RazonNavigation { get; set; }
+        [JsonIgnore]
+        public int? Vegosszeg => BazonNavigation.Bar * Bdb + KazonNavigation.Kar * Kdb + DazonNavigation.Dar * Ddb + IazonNavigation.Iar * Idb;
     }
 }

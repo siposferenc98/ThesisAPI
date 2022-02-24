@@ -40,7 +40,7 @@ namespace VizsgaremekAPI.Controllers
         {
             if (Auth == AktivTokenek.AdminToken || Auth == AktivTokenek.UserToken)
             {
-                List<Tetel> szakacsTetelek = _context.Tetels.Where(x => (x.Bazon > 1 || x.Dazon > 1 || x.Iazon > 1) && x.Italstatus < 3 && x.Etelstatus < 2).ToList();
+                List<Tetel> szakacsTetelek = _context.Tetels.Where(x => (x.Bazon > 1 || x.Dazon > 1 || x.Kazon > 1) && x.Italstatus < 3 && x.Etelstatus < 2).ToList();
                 szakacsTetelek.ForEach(x =>
                 {
                     x.BazonNavigation = _context.Burgers.First(b => b.Bazon == x.Bazon);

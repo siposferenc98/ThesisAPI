@@ -14,13 +14,13 @@ namespace VizsgaremekAPI.Controllers
 
         // GET: api/<FelhasznalokController>
         [HttpGet]
-        public IActionResult Get([FromHeader]string Auth = null)
+        public IActionResult Get([FromHeader]string Auth)
         {
             
             if (Auth == AktivTokenek.AdminToken)
                 return StatusCode(200, _context.Felhasznalos);
 
-            return StatusCode(403,"Nincs jogod hozzá!");
+            return StatusCode(403);
 
         }
 
@@ -54,5 +54,25 @@ namespace VizsgaremekAPI.Controllers
 
             return StatusCode(500);
         }
+        // PUT api/<FelhasznalokController>/id
+        [HttpPut("{id}")]
+        public IActionResult FelhasznaloFrissitese(int id, Felhasznalo f)
+        {
+            Felhasznalo letezike = _context.Felhasznalos.Find(id);
+            if (letezike is null)
+            {
+                return StatusCode(409, "A felhasználó nem található!");
+                
+            }
+            else
+            {
+                _context.Entry(letezike).CurrentValues.SetValues(f);
+                if (_context.SaveChanges() > 0)
+                    return StatusCode(201);
+            }
+
+            return StatusCode(500);
+        }
+
     }
 }
