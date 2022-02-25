@@ -69,12 +69,16 @@ namespace VizsgaremekAPI.Controllers
         }
         // PUT /<Tetelek>
         [HttpPut]
-        public IActionResult Put([FromHeader] string Auth, Tetel t)
+        public IActionResult Put([FromHeader] string Auth, Tetel t, bool szakacs)
         {
             if (Auth == AktivTokenek.AdminToken || Auth == AktivTokenek.UserToken)
             {
                 Tetel aktt = _context.Tetels.Find(t.Tazon);
-                _context.Entry(aktt).CurrentValues.SetValues(t);
+                if (szakacs)
+                    aktt.Etelstatus = t.Etelstatus;
+                else
+                    aktt.Italstatus = t.Italstatus;
+                
                 if (_context.SaveChanges() > 0)
                     return StatusCode(200);
                 else
