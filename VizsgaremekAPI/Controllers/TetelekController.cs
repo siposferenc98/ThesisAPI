@@ -69,7 +69,7 @@ namespace VizsgaremekAPI.Controllers
         }
         // PUT /<Tetelek>
         [HttpPut]
-        public IActionResult Put([FromHeader] string Auth, Tetel t, bool szakacs)
+        public IActionResult Put([FromHeader] string Auth, Tetel t, bool szakacs = false)
         {
             if (Auth == AktivTokenek.AdminToken || Auth == AktivTokenek.UserToken)
             {
