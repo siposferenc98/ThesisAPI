@@ -67,9 +67,9 @@ namespace VizsgaremekAPI.Controllers
 
             return StatusCode(403);
         }
-        // PUT /<Tetelek>
-        [HttpPut]
-        public IActionResult Put([FromHeader] string Auth, Tetel t, bool szakacs = false)
+        // PUT /<Tetelek>/Status
+        [HttpPut("Status")]
+        public IActionResult PutStatus([FromHeader] string Auth, Tetel t, bool szakacs = false)
         {
             if (Auth == AktivTokenek.AdminToken || Auth == AktivTokenek.UserToken)
             {
@@ -87,7 +87,25 @@ namespace VizsgaremekAPI.Controllers
 
             return StatusCode(403);
         }
+        // PUT /<Tetelek>
+        [HttpPut]
+        public IActionResult Put([FromHeader] string Auth, Tetel t)
+        {
+            if (Auth == AktivTokenek.AdminToken || Auth == AktivTokenek.UserToken)
+            {
+                Tetel aktt = _context.Tetels.Find(t.Tazon);
+                if (aktt is not null)
+                {
+                    _context.Entry(aktt).CurrentValues.SetValues(t);
+                }
+                if (_context.SaveChanges() > 0)
+                    return StatusCode(200);
+                else
+                    return StatusCode(500);
+            }
 
+            return StatusCode(403);
+        }
         // DELETE /<Tetelek>/{id}
         [HttpDelete("{id}")]
         public IActionResult Delete([FromHeader] string Auth, int id)

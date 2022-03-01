@@ -54,6 +54,27 @@ namespace VizsgaremekAPI.Controllers
 
             return StatusCode(500);
         }
+        // PUT api/<FelhasznalokController>
+        [HttpPut("Admin")]
+        public IActionResult PutAdmin([FromHeader] string Auth, Felhasznalo f)
+        {
+            if (Auth == AktivTokenek.AdminToken)
+            {
+                Felhasznalo letezike = _context.Felhasznalos.FirstOrDefault(x => x.Email == f.Email);
+                if (letezike is null)
+                {
+                    _context.Felhasznalos.Add(f);
+                    if (_context.SaveChanges() > 0)
+                        return StatusCode(201);
+                }
+                else
+                {
+                    return StatusCode(409, "A felhasználó már létezik!");
+                }
+            }
+
+            return StatusCode(403);
+        }
         // PUT api/<FelhasznalokController>/id
         [HttpPut("{id}")]
         public IActionResult FelhasznaloFrissitese(int id, Felhasznalo f)
