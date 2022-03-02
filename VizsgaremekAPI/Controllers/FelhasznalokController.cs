@@ -41,7 +41,7 @@ namespace VizsgaremekAPI.Controllers
         public IActionResult Put(Felhasznalo f)
         {
             Felhasznalo letezike = _context.Felhasznalos.FirstOrDefault(x => x.Email == f.Email);
-            if(letezike is null)
+            if(letezike is null && f.Jog < 4)
             {
                 _context.Felhasznalos.Add(f);
                 if (_context.SaveChanges() > 0)
