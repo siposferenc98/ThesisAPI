@@ -11,13 +11,13 @@ namespace VizsgaremekAPI.Controllers
     {
         burgeretteremContext _context = new();
 
-        // GET: /<Burgers>
+        // GET: /<Burgerek>
         [HttpGet]
         public List<Burger> Get()
         {
             return new(_context.Burgers);
         }
-        // GET: /<Burgers>/Aktiv
+        // GET: /<Burgerek>/Aktiv
         [HttpGet("Aktiv")]
         public List<Burger> GetAktiv()
         {
@@ -25,11 +25,11 @@ namespace VizsgaremekAPI.Controllers
             return new(_context.Burgers.Where(x=>x.Aktiv == true));
         }
 
-        // PUT /<Burgers>
+        // PUT /<Burgerek>
         [HttpPost]
-        public StatusCodeResult Post([FromHeader]string Auth, Burger b)
+        public StatusCodeResult Post([FromHeader]string auth, Burger b)
         {
-            if(Auth == AktivTokenek.AdminToken)
+            if(auth == AktivTokenek.AdminToken)
             {
                 _context.Burgers.Add(b);
                 if (_context.SaveChanges() > 0)
@@ -40,11 +40,11 @@ namespace VizsgaremekAPI.Controllers
 
             return StatusCode(403);
         }
-        // PUT /<Burgers>
+        // PUT /<Burgerek>
         [HttpPut]
-        public IActionResult Put([FromHeader]string Auth, Burger b)
+        public IActionResult Put([FromHeader]string auth, Burger b)
         {
-           if(Auth == AktivTokenek.AdminToken)
+           if(auth == AktivTokenek.AdminToken)
             {
                 Burger aktb = _context.Burgers.Find(b.Bazon);
                 _context.Entry(aktb).CurrentValues.SetValues(b);
